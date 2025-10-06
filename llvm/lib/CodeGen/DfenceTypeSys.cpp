@@ -53,7 +53,10 @@
 #include "llvm/IR/Instructions.h" // For llvm::BlockAddress
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h" // For llvm::BlockAddress
-#include "llvm/CodeGen/DfenceTypeSys.h"
+#include "DfenceTypeSys.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/GlobalVariable.h" // también necesario si iterás sobre GlobalVariable
+
 
 using namespace llvm;
 
@@ -61,9 +64,9 @@ using namespace llvm;
 
 char ::DfenceTypeSys::ID = 0;
 
-FunctionPass *llvm::createDfenceTypeSystemPass() {
-    return new DfenceTypeSys();
-}
+// FunctionPass *llvm::createDfenceTypeSystemPass() {
+//     return new DfenceTypeSys();
+// }
 
 // Cache for gamma maps per basic block to avoid recomputation
 std::map<BasicBlock*, std::map<std::string, type_sys>> gamma_cache;

@@ -3269,7 +3269,11 @@ def : Pat<(X86MFence), (MFENCE)>;
 // SSE 1 & 2 - Prefetch and memory Dfence 
 //===----------------------------------------------------------------------===//
 let SchedRW = [WriteDfence] in {
-  def DFENCE : I<0xAE, MRM2r, (outs GR32:$rego), (ins GR32:$reg), "dfence\t$reg, $rego", [(set GR32:$rego, (int_x86_sse_dfence GR32:$reg))]>,
+  def DFENCE : I<0x0A, MRMDestReg,
+               (outs GR32:$dst),
+                (ins GR32:$src),
+                 "dfence\t$src, $dst",
+                  [(set GR32:$dst, (int_x86_sse_dfence GR32:$src))]>,
                 TB, Requires<[HasDfence]>{
   let hasSideEffects = 1;
   let mayStore = 1;
@@ -3278,7 +3282,7 @@ let SchedRW = [WriteDfence] in {
   let isPseudo = 0;
   }
 }
-def : Pat<(X86Dfence GR32:$reg), (DFENCE GR32:$reg)>;
+//def : Pat<(X86Dfence GR32:$src), (DFENCE GR32:$dst = GR32:$src)>;
 
 
 //===----------------------------------------------------------------------===//

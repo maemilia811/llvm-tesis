@@ -27,7 +27,7 @@
 #include "llvm/CodeGen/MachinePassRegistry.h"
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/CodeGen/RegAllocRegistry.h"
-#include "llvm/CodeGen/DfenceTypeSys.h"
+#include "DfenceTypeSys.h"
 #include "llvm/IR/IRPrintingPasses.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/PassInstrumentation.h"
@@ -1211,9 +1211,9 @@ void TargetPassConfig::addMachinePasses() {
   addPass(&XRayInstrumentationID);
   addPass(&PatchableFunctionID);
 
-  if(WithDfenceTS){
-    addPass(createDfenceTypeSystemPass());
-  }
+  // if(WithDfenceTS){
+  //   addPass(createDfenceTypeSystemPass());
+  // }
 
   addPreEmitPass();
 
