@@ -3272,7 +3272,7 @@ let SchedRW = [WriteDfence] in {
   def DFENCE : I<0x0C, MRMSrcReg,
                (outs GR32:$dst),
                 (ins GR32:$src),
-                 "dfence\t$dst, $src",
+                 "dfence\t$src, $dst",
                   [(set GR32:$dst, (int_x86_sse_dfence GR32:$src))]>,
                 TB, Requires<[HasDfence]>{
   let hasSideEffects = 1;
