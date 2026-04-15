@@ -3287,7 +3287,7 @@ let SchedRW = [WriteDfence] in {
 def : Pat<(X86Dfence GR32:$src), (DFENCE GR32:$src)>;
 
 let SchedRW = [WriteDfence] in {
-  def DFENCE_64 : I<0x0C, MRMSrcReg,
+  def DFENCE_64 : I<0x0B, MRMSrcReg,
                (outs GR64:$dst),
                 (ins GR64:$src),
                  "dfence\t$src, $dst",
@@ -3301,7 +3301,7 @@ let SchedRW = [WriteDfence] in {
   }
 }
 
-def : Pat<(X86Dfence GR64:$src), (DFENCE_64 GR64:$src)>;
+	def : Pat<(X86Dfence GR64:$src), (DFENCE_64 GR64:$src)>;
 
 //===----------------------------------------------------------------------===//
 // SSE 1 & 2 - Load/Store XCSR register
