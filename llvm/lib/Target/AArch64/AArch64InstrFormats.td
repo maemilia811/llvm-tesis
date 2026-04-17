@@ -2445,8 +2445,8 @@ class BaseDfenceOneOperandDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
   bits<5> Rd;
   bits<5> Rn;
 
-  let Inst{31} = sf; 0 
-  let Inst{30} = 0b1; 1 
+  let Inst{31} = sf; 
+  let Inst{30} = 0b1; 
   let Inst{29} = S;
   let Inst{28-21} = 0b00010000; 
   let Inst{20-16} = opc2;
