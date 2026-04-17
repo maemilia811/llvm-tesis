@@ -2462,7 +2462,7 @@ multiclass DfenceOneOperandData<bits<6> opc, string asm, SDPatternOperator node 
   def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
 
   // Sets flags.
-  def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11110,0b001001, 0b0b00000, GPR64,asm,node>;
+  def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11110,0b001001, 0b00000, GPR64,asm,node>;
 }
 
 //---
