@@ -2410,9 +2410,64 @@ class CallImm<bit op, string asm, list<dag> pattern>
     : BImm<op, (ins am_bl_target:$addr), asm, pattern>;
 
 //---
-// Basic one-operand data processing instructions.
+// Dfence processing instructions.
 //---
 
+let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
+class BaseDfenceOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
+                         RegisterClass regtype, string asm,
+                         SDPatternOperator node>
+  : I<(outs regtype:$Rd), (ins regtype:$Rn), asm, "\t$Rd, $Rn", "",
+      [(set regtype:$Rd, (node regtype:$Rn))]>,
+    Sched<[WriteI, ReadI]> {
+  bits<5> Rd;
+  bits<5> Rn;
+
+  let Inst{31} = sf;
+  let Inst{30} = 0b1;
+  let Inst{29} = S;
+  let Inst{28-21} = 0b0001000;
+  let Inst{20-16} = opc2;
+  let Inst{15-10} = opc;
+  let Inst{9-5}   = Rn;
+  let Inst{4-0}   = Rd;
+}
+
+let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
+class BaseDfenceOneOperandDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc, bits<5> Rn_fl,
+                         RegisterClass regtype, string asm,
+                         SDPatternOperator node>
+  : I<(outs regtype:$Rd), (ins regtype:$Rn), asm, "\t$Rd, $Rn", "",
+      [(set regtype:$Rd, (node regtype:$Rn))]>,
+    Sched<[WriteI, ReadI]> {
+  
+  let Uses = [NZCV];
+  bits<5> Rd;
+  bits<5> Rn;
+
+  let Inst{31} = sf;
+  let Inst{30} = 0b1;
+  let Inst{29} = S;
+  let Inst{28-21} = 0b0001000; 
+  let Inst{20-16} = opc2;
+  let Inst{15-10} = opc;
+  let Inst{9-5}   = Rn_fl;
+  let Inst{4-0}   = Rd;
+}
+
+let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
+multiclass DfenceOneOperandData<bits<6> opc, string asm, SDPatternOperator node = null_frag> {
+  def Wr : BaseDfenceOneOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
+
+  def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
+
+  // Sets flags.
+  def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11110,0b001001, 0b0b00000, GPR64,asm,node>;
+}
+
+//---
+// Basic one-operand data processing instructions.
+//---
 let mayLoad = 0, mayStore = 0, hasSideEffects = 0 in
 class BaseOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
                          RegisterClass regtype, string asm,
