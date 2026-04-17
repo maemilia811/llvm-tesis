@@ -2426,7 +2426,7 @@ class BaseDfenceOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
   let Inst{31} = sf;
   let Inst{30} = 0b1;
   let Inst{29} = S;
-  let Inst{28-21} = 0b00010000;
+  let Inst{28-21} = 0b00110000;
   let Inst{20-16} = opc2;
   let Inst{15-10} = opc;
   let Inst{9-5}   = Rn;
@@ -2448,7 +2448,7 @@ class BaseDfenceOneOperandDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
   let Inst{31} = sf;
   let Inst{30} = 0b1;
   let Inst{29} = S;
-  let Inst{28-21} = 0b00110000; 
+  let Inst{28-21} = 0b00010000; 
   let Inst{20-16} = opc2;
   let Inst{15-10} = opc;
   let Inst{9-5}   = Rn_fl;
@@ -2462,7 +2462,7 @@ multiclass DfenceOneOperandData<bits<6> opc, string asm, SDPatternOperator node 
   //def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
 
   // Sets flags.
-  def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11110,0b001001, 0b00000, GPR64,asm,node>;
+  def SWr : BaseDfenceOneOperandDataSetFlags<0, 1, 0b11110, 0b001001, 0b00000, GPR64,asm,node>;
 }
 
 //---
