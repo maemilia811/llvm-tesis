@@ -2457,9 +2457,9 @@ class BaseDfenceOneOperandDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
 multiclass DfenceOneOperandData<bits<6> opc, string asm, SDPatternOperator node = null_frag> {
-  def Wr : BaseDfenceOneOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
+  //def Wr : BaseDfenceOneOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
 
-  def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
+  //def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
 
   // Sets flags.
   def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11110,0b001001, 0b00000, GPR64,asm,node>;
