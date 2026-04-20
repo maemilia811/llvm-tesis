@@ -3287,7 +3287,7 @@ let SchedRW = [WriteDfence] in {
 def : Pat<(X86Dfence GR32:$src), (DFENCE GR32:$src)>;
 
 let SchedRW = [WriteDfence] in {
-  def DFENCE_64 : I<0x0B, MRMSrcReg,
+  def DFENCE_64 : I<0x0C, MRMSrcReg,
                (outs GR64:$dst),
                 (ins GR64:$src),
                  "dfence\t$src, $dst",
@@ -3301,7 +3301,24 @@ let SchedRW = [WriteDfence] in {
   }
 }
 
-	def : Pat<(X86Dfence GR64:$src), (DFENCE_64 GR64:$src)>;
+def : Pat<(X86Dfence GR64:$src), (DFENCE_64 GR64:$src)>;
+
+let SchedRW = [WriteDfence] in {
+  def DFENCEFL : I<0x0A, MRM5X,
+                (outs),
+                (ins),
+                 "dfencefl\t",
+                  [(int_x86_sse_dfencefl)]>,
+                TB, Requires<[HasDfence]>{
+                  let hasSideEffects = 1;
+                  let mayStore = 1;
+                  let hasNoSchedulingInfo = 0;
+                  let isCodeGenOnly = 0;
+                  let isPseudo = 0;
+                }
+}
+def : Pat<(X86DfenceFl), (DFENCEFL)>;
+
 
 //===----------------------------------------------------------------------===//
 // SSE 1 & 2 - Load/Store XCSR register
