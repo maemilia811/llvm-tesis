@@ -829,7 +829,8 @@ def AArch64csinc         : SDNode<"AArch64ISD::CSINC", SDT_AArch64CSel>;
 // Return with a glue operand. Operand 0 is the chain operand.
 def AArch64retglue       : SDNode<"AArch64ISD::RET_GLUE", SDTNone,
                                 [SDNPHasChain, SDNPOptInGlue, SDNPVariadic]>;
-def AArch64adc       : SDNode<"AArch64ISD::ADC",  SDTBinaryArithWithFlagsIn >;
+def AArch64adc       : SDNode<"AArch64ISD::ADC",  SDTBinaryArithWithFlagsIn>;
+def AArch64dfence    : SDNode<"AArch64ISD::DFENCE",  SDTBinaryArithWithFlagsInOut>;
 def AArch64sbc       : SDNode<"AArch64ISD::SBC",  SDTBinaryArithWithFlagsIn>;
 
 // Arithmetic instructions which write flags.
@@ -2618,6 +2619,9 @@ def : Pat<(AArch64WrapperLarge tjumptable:$g3, tjumptable:$g2,
 //===----------------------------------------------------------------------===//
 // Arithmetic instructions.
 //===----------------------------------------------------------------------===//
+
+// Dfence 
+defm DFENCE : DfenceOperandsData<0b010001, "dfence", "dfencefl">;
 
 // Add/subtract with carry.
 defm ADC : AddSubCarry<0, "adc", "adcs", AArch64adc, AArch64adc_flag>;
