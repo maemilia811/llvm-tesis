@@ -2435,11 +2435,10 @@ class BaseDfenceTwoOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
 class BaseDfenceDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
-                         RegisterClass regtype,
-                         string asm,
-                         SDPatternOperator node>
-  : I<(outs regtype:$Rd), (ins regtype:$Rn), asm, "\t$Rd, $Rn", "",
-      [(set regtype:$Rd, (node regtype:$Rn))]>,
+                             string asm,
+                             list<dag> pattern>
+  // Removed (outs) and (ins) operands, and removed "\t$Rd, $Rn"
+  : I<(outs), (ins), asm, "", "", pattern>,
     Sched<[WriteI, ReadI]> {
   
   let Uses = [NZCV];
@@ -2454,13 +2453,14 @@ class BaseDfenceDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
 }
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
-multiclass DfenceOperandsData<bits<6> opc, string asm, SDPatternOperator node = null_frag> {
-  def Wr : BaseDfenceTwoOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
+multiclass DfenceOperandsData<bits<6> opc, string asm, string asm_flag, SDPatternOperator node = null_frag> {
+  // 32-bit and 64-bit variants remain unchanged
+  def Wr : BaseDfenceTwoOperandData<0b0, 0b0, 0b00001, opc, GPR32, asm, node>;
+  def Xr : BaseDfenceTwoOperandData<0b1, 0b0, 0b00001, opc, GPR64, asm, node>;
 
-  def Xr : BaseDfenceTwoOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
-
-  // Sets flags.
-  def SWr : BaseDfenceDataSetFlags<0,1, 0b11011, 0b010000, GPR64, asm, node>;
+  // Zero-operand flag-setting variant
+  // Removed GPR64 requirement, pass an empty DAG pattern []
+  def SWr : BaseDfenceDataSetFlags<0b0, 0b1, 0b11011, 0b010000, asm_flag, []>;
 }
 
 //---

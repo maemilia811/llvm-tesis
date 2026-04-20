@@ -2621,8 +2621,7 @@ def : Pat<(AArch64WrapperLarge tjumptable:$g3, tjumptable:$g2,
 //===----------------------------------------------------------------------===//
 
 // Dfence 
-defm DFENCE : DfenceOperandsData<0b010001, "dfence">;
-
+defm DFENCE : DfenceOperandsData<0b010001, "dfence", "dfencefl">;
 
 // Add/subtract with carry.
 defm ADC : AddSubCarry<0, "adc", "adcs", AArch64adc, AArch64adc_flag>;
