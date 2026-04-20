@@ -2414,7 +2414,7 @@ class CallImm<bit op, string asm, list<dag> pattern>
 //---
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
-class BaseDfenceOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
+class BaseDfenceTwoOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
                          RegisterClass regtype, string asm,
                          SDPatternOperator node>
   : I<(outs regtype:$Rd), (ins regtype:$Rn), asm, "\t$Rd, $Rn", "",
@@ -2426,7 +2426,7 @@ class BaseDfenceOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
   let Inst{31} = sf;
   let Inst{30} = 0b1;
   let Inst{29} = S;
-  let Inst{28-21} = 0b00110000;
+  let Inst{28-21} = 0b00000000;
   let Inst{20-16} = opc2;
   let Inst{15-10} = opc;
   let Inst{9-5}   = Rn;
@@ -2434,35 +2434,33 @@ class BaseDfenceOneOperandData<bit sf, bit S, bits<5> opc2, bits<6> opc,
 }
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
-class BaseDfenceOneOperandDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc, bits<5> Rn_fl,
-                         RegisterClass regtype, string asm,
+class BaseDfenceDataSetFlags<bit sf, bit S, bits<5> opc2, bits<6> opc,
+                         RegisterClass regtype,
+                         string asm,
                          SDPatternOperator node>
   : I<(outs regtype:$Rd), (ins regtype:$Rn), asm, "\t$Rd, $Rn", "",
       [(set regtype:$Rd, (node regtype:$Rn))]>,
     Sched<[WriteI, ReadI]> {
   
   let Uses = [NZCV];
-  bits<5> Rd;
-  bits<5> Rn;
-
   let Inst{31} = sf; 
   let Inst{30} = 0b1; 
   let Inst{29} = S;
   let Inst{28-21} = 0b00010000; 
   let Inst{20-16} = opc2;
   let Inst{15-10} = opc;
-  let Inst{9-5}   = Rn_fl;
-  let Inst{4-0}   = Rd;
+  let Inst{9-5}   = 0b10000;
+  let Inst{4-0}   = 0b00000;
 }
 
 let mayLoad = 0, mayStore = 0, hasSideEffects = 1 in
-multiclass DfenceOneOperandData<bits<6> opc, string asm, SDPatternOperator node = null_frag> {
-  //def Wr : BaseDfenceOneOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
+multiclass DfenceOperandsData<bits<6> opc, string asm, SDPatternOperator node = null_frag> {
+  def Wr : BaseDfenceTwoOperandData<0b0, 0b0, 0b00000, opc, GPR32, asm, node>;
 
-  //def Xr : BaseDfenceOneOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
+  def Xr : BaseDfenceTwoOperandData<0b1, 0b0, 0b00000, opc, GPR64, asm, node>;
 
   // Sets flags.
-  def SWr : BaseDfenceOneOperandDataSetFlags<0,1, 0b11011,0b010000, 0b10000, GPR64,asm,node>;
+  def SWr : BaseDfenceDataSetFlags<0,1, 0b11011, 0b010000, GPR64, asm, node>;
 }
 
 //---
