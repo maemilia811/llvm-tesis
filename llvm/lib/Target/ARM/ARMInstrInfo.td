@@ -221,6 +221,8 @@ def ARMlsrs1 : SDNode<"ARMISD::LSRS1", SDTIntUnaryOpWithFlagsOut>;
 def ARMasrs1 : SDNode<"ARMISD::ASRS1", SDTIntUnaryOpWithFlagsOut>;
 def ARMrrx   : SDNode<"ARMISD::RRX"  , SDTIntUnaryOpWithFlagsIn>;
 
+def ARMdfence        : SDNode <"ARMISD::DFENCE",  SDTBinaryArithWithFlagsInOut>;
+
 def ARMaddc          : SDNode<"ARMISD::ADDC",  SDTBinaryArithWithFlags,
                               [SDNPCommutative]>;
 def ARMsubc          : SDNode<"ARMISD::SUBC",  SDTBinaryArithWithFlags>;
@@ -3880,7 +3882,6 @@ def UBFX  : I<(outs GPRnopc:$Rd),
 //===----------------------------------------------------------------------===//
 //  Arithmetic Instructions.
 //
-
 let isAdd = 1 in
 defm ADD  : AsI1_bin_irs<0b0100, "add",
                          IIC_iALUi, IIC_iALUr, IIC_iALUsr, add, 1>;
@@ -3920,6 +3921,7 @@ defm RSC : AI1_rsc_irs<0b0111, "rsc", ARMsube>;
 // assume opposite meanings of the carry flag (i.e., carry == !borrow).
 // See the definition of AddWithCarry() in the ARM ARM A2.2.1 for the gory
 // details.
+
 def : ARMPat<(add     GPR:$src, mod_imm_neg:$imm),
              (SUBri   GPR:$src, mod_imm_neg:$imm)>;
 def : ARMPat<(ARMaddc GPR:$src, mod_imm_neg:$imm),
@@ -5166,6 +5168,22 @@ def tsb_opt : Operand<i32> {
 }
 
 // Memory barriers protect the atomic sequences
+let hasSideEffects = 1 in {
+  def DFENCE :  T2sI<(outs GPR:$Rd), (ins GPR:$Rn), NoItinerary,
+                "dfence ", "\t$Rd, $Rn", []>,
+                Sched<[WriteALU, ReadALU]>,
+                Requires<[IsThumb2]> {
+  bits<5> Rd;
+  bits<5> Rn;
+  let Inst{31-27} = 0b11111;
+  let Inst{26-21} = 0b010010;
+  let Inst{20-16} = 0b00000;
+  let Inst{15-10} = 0b000100;
+  let Inst{9-5}   = Rn;
+  let Inst{4-0}   = Rd;
+  }
+}
+
 let hasSideEffects = 1 in {
 def DMB : AInoP<(outs), (ins memb_opt:$opt), MiscFrm, NoItinerary,
                 "dmb", "\t$opt", [(int_arm_dmb (i32 imm0_15:$opt))]>,
