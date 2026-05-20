@@ -5170,18 +5170,32 @@ def tsb_opt : Operand<i32> {
 // Memory barriers protect the atomic sequences
 let hasSideEffects = 1 in {
   def DFENCE :  T2sI<(outs GPR:$Rd), (ins GPR:$Rn), NoItinerary,
-                "dfence ", "\t$Rd, $Rn", []>,
+                "dfence", "\t$Rd, $Rn", []>,
                 Sched<[WriteALU, ReadALU]>,
                 Requires<[IsThumb2]> {
-  bits<5> Rd;
-  bits<5> Rn;
-  let Inst{31-27} = 0b11111;
-  let Inst{26-21} = 0b010010;
-  let Inst{20-16} = 0b00000;
-  let Inst{15-10} = 0b000100;
-  let Inst{9-5}   = Rn;
-  let Inst{4-0}   = Rd;
+    bits<5> Rd;
+    bits<5> Rn;
+    let Inst{31-27} = 0b11111;
+    let Inst{26-21} = 0b010010;
+    let Inst{20-16} = 0b00000;
+    let Inst{15-10} = 0b000100;
+    let Inst{9-5}   = Rn;
+    let Inst{4-0}   = Rd;
   }
+  
+  def DFENCEFL :  T2sI<(outs), (ins), NoItinerary,
+                "dfencefl", "", []>,
+                Sched<[WriteALU, ReadALU]>,
+                Requires<[IsThumb2]> {
+
+    let Inst{31-27} = 0b11111;
+    let Inst{26-21} = 0b010000;
+    let Inst{20-16} = 0b00000;
+    let Inst{15-10} = 0b000100;
+    let Inst{9-5}   = 0b00000;
+    let Inst{4-0}   = 0b00000;
+  }
+
 }
 
 let hasSideEffects = 1 in {
