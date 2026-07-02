@@ -839,8 +839,9 @@ def FENCE_I : RVInstI<0b001, OPC_MISC_MEM, (outs), (ins), "fence.i", "">, Sched<
   let imm12 = 0;
 }
 
-def DFENCE : RVInstI<0b000, OPC_MISC_MEM, (outs GPR:$rd), (ins GPR:$rs1), "dfence", "$rd, $rs1">, Sched<[]> {
-  let imm12 = {0b0001,0b0000,0b0000};
+def DFENCE : RVInstI<0b001, OPC_CUSTOM_0, (outs GPR:$rd), (ins GPR:$rs1), "dfence", "$rd, $rs1">, Sched<[]> {
+
+  let imm12 = 0b000100000000;
   let isPseudo = 0;
 }
 
