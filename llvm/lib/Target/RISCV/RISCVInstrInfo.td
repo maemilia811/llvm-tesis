@@ -839,9 +839,23 @@ def FENCE_I : RVInstI<0b001, OPC_MISC_MEM, (outs), (ins), "fence.i", "">, Sched<
   let imm12 = 0;
 }
 
-def DFENCE : RVInstI<0b001, OPC_CUSTOM_0, (outs GPR:$rd), (ins GPR:$rs1), "dfence", "$rd, $rs1">, Sched<[]> {
+def DFENCE : RVInst<(outs GPR:$rd), (ins GPR:$rs1), "dfence", "$rd, $rs1", [], InstFormatOther> {
+  bits<5> rd;
+  bits<5> rs1;
 
-  let imm12 = 0b000100000000;
+  let Namespace = "RISCV";
+  let DecoderNamespace = "RISCV";
+  
+  // FORCE TableGen to generate a custom decoding hook entry
+  let DecoderMethod = "DecodeGPRRegisterClass";
+
+  let Inst{31-25} = 0b0001000;          // funct7 fixed bits
+  let Inst{24-20} = 0b00000;            // rs2 hardcoded to 0
+  let Inst{19-15} = rs1;                // Source register 1
+  let Inst{14-12} = 0b001;              // funct3
+  let Inst{11-7}  = rd;                 // Destination register
+  let Inst{6-0}   = OPC_CUSTOM_0.Value; // Opcode (0x0B)
+
   let isPseudo = 0;
 }
 
