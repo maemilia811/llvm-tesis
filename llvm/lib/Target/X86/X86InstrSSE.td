@@ -3320,7 +3320,7 @@ let SchedRW = [WriteDfence] in {
 def : Pat<(X86DfenceFl), (DFENCEFL)>;
 
 let SchedRW = [WriteDfence] in {
-  def DFENCERIP : I<0x0A, MRM6X,
+  def DFENCERIP : I<0x0B, MRM6X,
                 (outs),
                 (ins),
                  "dfencerip\t",
