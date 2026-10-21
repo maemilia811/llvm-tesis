@@ -139,6 +139,8 @@ def X86Dfence : SDNode<"X86ISD::DFENCE", SDTAtomicDfence, [SDNPHasChain, SDNPMem
 
 def X86DfenceFl : SDNode<"X86ISD::DFENCEFL",  SDTNone, [SDNPHasChain, SDNPMemOperand]>;
  
+def X86DfenceRip : SDNode<"X86ISD::DFENCERIP",  SDTNone, [SDNPHasChain, SDNPMemOperand]>;
+
 def X86bsf     : SDNode<"X86ISD::BSF",      SDTBinaryArithWithFlags>;
 def X86bsr     : SDNode<"X86ISD::BSR",      SDTBinaryArithWithFlags>;
 def X86fshl    : SDNode<"X86ISD::FSHL",     SDTIntShiftDOp>;

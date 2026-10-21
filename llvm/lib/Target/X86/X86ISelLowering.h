@@ -768,6 +768,8 @@ namespace llvm {
     // Memory barriers.
     DFENCEFL,
 
+    DFENCERIP,
+
     // Get a random integer and indicate whether it is valid in CF.
     RDRAND,
 

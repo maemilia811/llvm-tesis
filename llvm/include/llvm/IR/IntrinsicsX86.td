@@ -464,7 +464,9 @@ let TargetPrefix = "x86" in {  // All intrinsics start with "llvm.x86.".
               Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrHasSideEffects]>;
   def int_x86_sse_dfence_64 : ClangBuiltin<"__builtin_ia64_dfence">,
               Intrinsic<[llvm_i64_ty], [llvm_i64_ty], [IntrHasSideEffects]>;
- def int_x86_sse_dfencefl : ClangBuiltin<"__builtin_ia64_dfencefl">,
+  def int_x86_sse_dfencefl : ClangBuiltin<"__builtin_ia64_dfencefl">,
+              Intrinsic<[], [], []>;
+  def int_x86_sse_dfencerip : ClangBuiltin<"__builtin_ia64_dfencerip">,
               Intrinsic<[], [], []>;
 }
 //===----------------------------------------------------------------------===//

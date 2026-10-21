@@ -1351,6 +1351,8 @@ enum NodeType {
 
   ATOMIC_DFENCEFL,
 
+  ATOMIC_DFENCERIP,
+
   /// Val, OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr)
   /// This corresponds to "load atomic" instruction.
   ATOMIC_LOAD,

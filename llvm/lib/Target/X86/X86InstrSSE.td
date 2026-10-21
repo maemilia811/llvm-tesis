@@ -3319,7 +3319,21 @@ let SchedRW = [WriteDfence] in {
 }
 def : Pat<(X86DfenceFl), (DFENCEFL)>;
 
-
+let SchedRW = [WriteDfence] in {
+  def DFENCERIP : I<0x0A, MRM6X,
+                (outs),
+                (ins),
+                 "dfencerip\t",
+                  [(int_x86_sse_dfencerip)]>,
+                TB, Requires<[HasDfence]>{
+                  let hasSideEffects = 1;
+                  let mayStore = 1;
+                  let hasNoSchedulingInfo = 0;
+                  let isCodeGenOnly = 0;
+                  let isPseudo = 0;
+                }
+}
+def : Pat<(X86DfenceRip), (DFENCERIP)>;
 //===----------------------------------------------------------------------===//
 // SSE 1 & 2 - Load/Store XCSR register
 //===----------------------------------------------------------------------===//

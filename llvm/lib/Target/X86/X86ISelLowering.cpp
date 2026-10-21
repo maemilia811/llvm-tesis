@@ -32279,6 +32279,13 @@ static SDValue LowerATOMIC_DFENCEFL(SDValue Op, const X86Subtarget &Subtarget,
   return DAG.getNode(X86ISD::DFENCEFL, dl, MVT::Other, Chain);
 }
 
+static SDValue LowerATOMIC_DFENCERIP(SDValue Op, const X86Subtarget &Subtarget,
+                                 SelectionDAG &DAG) {
+  SDLoc dl(Op);
+  SDValue Chain = Op.getOperand(0);
+
+  return DAG.getNode(X86ISD::DFENCERIP, dl, MVT::Other, Chain);
+}
 
 static SDValue LowerCMP_SWAP(SDValue Op, const X86Subtarget &Subtarget,
                              SelectionDAG &DAG) {
@@ -33583,7 +33590,8 @@ SDValue X86TargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ATOMIC_DFENCE:      return LowerATOMIC_DFENCE(Op, Subtarget, DAG);
     case ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS:
     return LowerCMP_SWAP(Op, Subtarget, DAG);
-  case ISD::ATOMIC_DFENCEFL: return LowerATOMIC_DFENCEFL(Op, Subtarget, DAG);
+  case ISD::ATOMIC_DFENCERIP: return LowerATOMIC_DFENCERIP(Op, Subtarget, DAG);
+    case ISD::ATOMIC_DFENCEFL: return LowerATOMIC_DFENCEFL(Op, Subtarget, DAG);
     case ISD::CTPOP:              return LowerCTPOP(Op, Subtarget, DAG);
   case ISD::ATOMIC_LOAD_ADD:
   case ISD::ATOMIC_LOAD_SUB:
@@ -35169,6 +35177,7 @@ const char *X86TargetLowering::getTargetNodeName(unsigned Opcode) const {
   NODE_NAME_CASE(MFENCE)
   NODE_NAME_CASE(DFENCE)
   NODE_NAME_CASE(DFENCEFL)
+  NODE_NAME_CASE(DFENCERIP)
   NODE_NAME_CASE(SEG_ALLOCA)
   NODE_NAME_CASE(PROBED_ALLOCA)
   NODE_NAME_CASE(RDRAND)
