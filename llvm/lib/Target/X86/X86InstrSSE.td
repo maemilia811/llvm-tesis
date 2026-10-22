@@ -3306,7 +3306,7 @@ def : Pat<(X86Dfence GR64:$src), (DFENCE_64 GR64:$src)>;
 let SchedRW = [WriteDfence] in {
   def DFENCEFL : I<0x0A, MRM5X,
                 (outs),
-                (ins),
+                (ins),class I<
                  "dfencefl\t",
                   [(int_x86_sse_dfencefl)]>,
                 TB, Requires<[HasDfence]>{
@@ -3320,7 +3320,7 @@ let SchedRW = [WriteDfence] in {
 def : Pat<(X86DfenceFl), (DFENCEFL)>;
 
 let SchedRW = [WriteDfence] in {
-  def DFENCERIP : I<0x0B, MRM6X,
+  def DFENCERIP : I<0x0A, MRM6X,
                 (outs),
                 (ins),
                  "dfencerip\t",
